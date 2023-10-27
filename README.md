@@ -1,1 +1,98 @@
-# trivia--css
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Trivia Game</title>
+</head>
+<body>
+    <div class="container">
+        <h1>Trivia Game</h1>
+        <div id="question-container">
+            <p id="question">Question goes here</p>
+        </div>
+        <div id="options-container">
+            <button class="option">Option 1</button>
+            <button class="option">Option 2</button>
+            <button class="option">Option 3</button>
+            <button class="option">Option 4</button>
+        </div>
+        <p id="result"></p>
+        <button id="next-button">Next</button>
+    </div>
+    <script>
+        const questions = [
+            {
+                question: "What is the capital of France?",
+                options: ["London", "Berlin", "Madrid", "Paris"],
+                answer: "Paris"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Mars", "Earth", "Venus", "Saturn"],
+                answer: "Mars"
+            },
+            {
+                question: "What is the largest mammal in the world?",
+                options: ["Elephant", "Blue Whale", "Giraffe", "Hippopotamus"],
+                answer: "Blue Whale"
+            }
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        const questionElement = document.getElementById("question");
+        const optionsContainer = document.getElementById("options-container");
+        const resultElement = document.getElementById("result");
+        const nextButton = document.getElementById("next-button");
+
+        function displayQuestion() {
+            questionElement.textContent = questions[currentQuestion].question;
+            optionsContainer.innerHTML = "";
+            
+            questions[currentQuestion].options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.classList.add("option");
+                button.addEventListener("click", () => checkAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(selectedOption) {
+            if (selectedOption === questions[currentQuestion].answer) {
+                resultElement.textContent = "Correct!";
+                score++;
+            } else {
+                resultElement.textContent = "Wrong. The correct answer is: " + questions[currentQuestion].answer;
+            }
+            nextButton.style.display = "block";
+            document.querySelectorAll(".option").forEach(option => {
+                option.disabled = true;
+            });
+        }
+
+        nextButton.addEventListener("click", () => {
+            if (currentQuestion < questions.length - 1) {
+                currentQuestion++;
+                displayQuestion();
+                resultElement.textContent = "";
+                nextButton.style.display = "none";
+                document.querySelectorAll(".option").forEach(option => {
+                    option.disabled = false;
+                });
+            } else {
+                displayResult();
+            }
+        });
+
+        function displayResult() {
+            questionElement.textContent = "Quiz Completed!";
+            optionsContainer.innerHTML = `You scored ${score} out of ${questions.length}.`;
+            resultElement.textContent = "";
+            nextButton.style.display = "none";
+        }
+
+        displayQuestion();
+    </script>
+</body>
+</html>
